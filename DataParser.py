@@ -22,8 +22,9 @@ class DataParser:
   def readData(self):
     '''
     Reads in the relevant data.
-    @return 2 dictionaries: users mapping -> index, and movies mapping ->
-        index.
+    @return 3 things:
+        mapping from users -> 0-based user index
+        mapping from movies mapping -> 0-based movie index
     '''
 
     trainingDir = os.path.join(os.getcwd(), constants.TRAINING_DIR)
