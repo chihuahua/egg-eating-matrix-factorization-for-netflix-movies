@@ -34,3 +34,12 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+# Mac or IDE specific.
+.idea
+.idea/*
+*.pyc
+*.DS_Store
+*~
+*.swp
+
