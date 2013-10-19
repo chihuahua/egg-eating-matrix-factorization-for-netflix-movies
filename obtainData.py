@@ -1,5 +1,5 @@
 #
-# Randomly copies training data from Netflix movie data into repo.
+# Randomly moves training data from Netflix movie data into repo.
 # @author Chi Zeng (chi@chizeng.com)
 # Oct. 19, 2013
 #
