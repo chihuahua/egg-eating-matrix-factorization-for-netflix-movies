@@ -4,7 +4,7 @@
 # Oct. 19, 2013
 #
 
-import os, os.path, random
+import os, os.path, random, shutil
 
 # directory of the original movie data.
 originalMovieDataDir = '../netflixData/training_set/'
@@ -24,4 +24,4 @@ if __name__ == '__main__':
   for fileName in filesToMove:
     src = os.path.join(originalMovieDataDir, fileName)
     dest = os.path.join(destination, fileName)
-    os.rename(src, dest)
+    shutil.copy(src, dest)
