@@ -3,7 +3,7 @@
 #
 
 import constants
-import numpy, os, os.path
+import numpy, os, os.path, scipy.sparse
 
 class DataParser:
 
@@ -106,5 +106,8 @@ class DataParser:
 
       if constants.DEBUG:
         print 'Finished storing ratings for movie ' + `movieIndex` + '.'
+
+    # turn them into sparse matices.
+    ratings = scipy.sparse.csr_matrix(ratings)
 
     return users, movies, ratings
