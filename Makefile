@@ -1,0 +1,2 @@
+clearCache:
+	rm -rf cache/*
