@@ -5,7 +5,7 @@
 import constants, DataParser
 import math, scipy, json, numpy, os.path, pdb
 
-def stop(probeData, predictionMatrix, movieMapping, userMapping, rmseFile):
+def stop(probeData, mMatrixT, uMatrix, movieMapping, userMapping, rmseFile):
   '''
   Returns if we should stop doing more iterations of alternating. One iteration
   is defined as solving for both U and M.
@@ -15,13 +15,29 @@ def stop(probeData, predictionMatrix, movieMapping, userMapping, rmseFile):
   @param movieMapping mapping from movie id -> movie index.
   @param userMapping mapping from user id -> user index
   '''
+  # cumError = 0.
+  # ratingCount = 0
+  # for movieId in probeData:
+  #   for userId in probeData[movieId]:
+  #     probeRating = probeData[movieId][userId]
+  #     predictedRating =\
+  #         predictionMatrix[movieMapping[movieId], userMapping[userId]]
+  #     cumError += (probeRating - predictedRating) ** 2
+  #     ratingCount += 1
+  #
+  # rmse = math.sqrt(cumError / ratingCount)
+  # print `rmse`
+  # rmseFile.write(str(rmse))
+  # return rmse < 1.
+
   cumError = 0.
   ratingCount = 0
   for movieId in probeData:
     for userId in probeData[movieId]:
       probeRating = probeData[movieId][userId]
-      predictedRating =\
-          predictionMatrix[movieMapping[movieId], userMapping[userId]]
+      predictedRating = numpy.dot(
+          mMatrixT[movieMapping[movieId], :],
+              uMatrix[:, userMapping[userId]])
       cumError += (probeRating - predictedRating) ** 2
       ratingCount += 1
 
@@ -29,7 +45,6 @@ def stop(probeData, predictionMatrix, movieMapping, userMapping, rmseFile):
   print `rmse`
   rmseFile.write(str(rmse))
   return rmse < 1.
-
 
 if __name__ == '__main__':
 
@@ -198,15 +213,13 @@ if __name__ == '__main__':
       numpy.save(MMatrixFile + str(iterations), M)
 
     print `(M.shape, U.shape)`
-    predictionMatrix = numpy.matrix(M).getT() * numpy.matrix(U)
-    numpy.save(constants.PREDICTION_MATRIX_FILE, predictionMatrix)
+    mMatrixT = numpy.matrix(M).getT()
+    uMatrix = numpy.matrix(U)
 
     print 'Just finished iteration ' + `iterations` + '.'
 
-    stop(probeDataForStopFunction, predictionMatrix, movies, users, rmseFile)
+    stop(probeDataForStopFunction, mMatrixT, uMatrix, movies, users, rmseFile)
     if iterations == constants.MAX_ITERATIONS:
       break
 
     iterations += 1
-
-
