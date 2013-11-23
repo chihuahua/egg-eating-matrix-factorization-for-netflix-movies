@@ -42,7 +42,7 @@ class DataParser:
 
     # create sparse matrix of r.
     # mapping: movie index -> [(user index, rating) ... ]
-    sparseR = [[],]
+    sparseR = []
 
     for fileName in fileNames:
 
@@ -59,12 +59,13 @@ class DataParser:
 
       # store the movie id.
       movieId = int(fileName[3:-4])
+
       if movieId not in movies:
-        movies[movieId] = movieIndex
         movieIndex += 1
 
         # create new entry in sparse R for this movie.
         sparseR.append([])
+        movies[movieId] = movieIndex
 
       for line in file:
 
@@ -78,12 +79,15 @@ class DataParser:
           # store the user Id.
           userId = int(elements[0])
           if userId not in users:
-            users[userId] = userIndex
             userIndex += 1
+            users[userId] = userIndex
+            currentUserIndex = userIndex
+          else:
+            currentUserIndex = users[userId]
 
           # record the rating of this user.
           rating = int(elements[1])
-          sparseR[movieIndex].append((userIndex, rating))
+          sparseR[movieIndex].append((currentUserIndex, rating))
 
       # close file.
       file.close()
@@ -94,7 +98,6 @@ class DataParser:
     # create the ratings matrix.
     ratings = numpy.zeros((len(users), len(movies)))
 
-    # populate dense ratings matrix.
     for movieIndex, ratingEntries in enumerate(sparseR):
       # record the ratings for this single movie.
 
